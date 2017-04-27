@@ -1,4 +1,4 @@
-class AdditionalFilesController < ApplicationController
+class Api::V1::AdditionalFilesController < ApplicationController
   before_action :set_additional_file, only: [:show, :update, :destroy]
 
   # GET /additional_files

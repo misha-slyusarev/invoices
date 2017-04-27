@@ -1,4 +1,4 @@
-class RecipientsController < ApplicationController
+class Api::V1::RecipientsController < ApplicationController
   before_action :set_recipient, only: [:show, :update, :destroy]
 
   # GET /recipients
