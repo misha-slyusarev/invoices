@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Container, Header, Dimmer, Loader, Divider } from 'semantic-ui-react'
+import { Container, Segment } from 'semantic-ui-react'
+import Uploader from './Uploader'
 import './App.css';
 
 class App extends Component {
@@ -31,28 +32,16 @@ class App extends Component {
       .then(recipient => this.setState({recipient: recipient}))
   }
   render() {
-    let {recipients, recipient} = this.state
-    return recipients
-    ? <Container text>
-        <Header as='h2' icon textAlign='center'>
-          <Header.Content>
-            List of recipients
-          </Header.Content>
-        </Header>
-      <Divider hidden />
-      {recipient &&
-        <Container>
-          <Header as='h2'>{recipient.name}</Header>
-          {recipient.surname && <p>{recipient.surname}</p>}
-          {recipient.address && <p>{recipient.address}</p>}
-        </Container>
-      }
-    </Container>
-    : <Container text>
-      <Dimmer active inverted>
-        <Loader content='Loading' />
-      </Dimmer>
-    </Container>
+    return (
+      <Container>
+        <Segment>
+          <Uploader title='Upload your invoice' multiple={false}/>
+        </Segment>
+        <Segment>
+          <Uploader title='Drag your files' multiple={true}/>
+        </Segment>
+      </Container>
+    )
   }
 }
 
