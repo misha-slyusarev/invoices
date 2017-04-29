@@ -8,6 +8,7 @@ class App extends Component {
     super()
     this.state = {}
     this.getRecipients = this.getRecipients.bind(this)
+    this.markInvoiceUploaded = this.markInvoiceUploaded.bind(this)
   }
   componentDidMount() {
     this.getRecipients()
@@ -31,11 +32,28 @@ class App extends Component {
     this.fetch(`v1/recipients/${id}`)
       .then(recipient => this.setState({recipient: recipient}))
   }
+
+  markInvoiceUploaded() {
+    this.setState({invoiceUploaded: true});
+  }
+
   render() {
+    let invoiceSection = null;
+    let filesSection = null;
+
+    if (this.state.invoiceUploaded) {
+      invoiceSection = <span>Invoice uploaded</span>;
+    } else {
+      invoiceSection = <Uploader
+        title='Upload your invoice'
+        multiple={false}
+        markInvoiceUploaded={this.markInvoiceUploaded}/>
+    }
+
     return (
       <Container>
         <Segment>
-          <Uploader title='Upload your invoice' multiple={false}/>
+          {invoiceSection}
         </Segment>
         <Segment>
           <Uploader title='Drag your files' multiple={true}/>

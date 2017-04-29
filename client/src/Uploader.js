@@ -3,15 +3,15 @@ import Dropzone from 'react-dropzone';
 
 export default class Uploader extends Component {
   render() {
-    console.log(this.props.multiple)
     return (
-      <Dropzone className='uploader' multiple={this.props.multiple} accept={'image/*'} onDrop={this.dropHandler}>
+      <Dropzone className='uploader' multiple={this.props.multiple}
+       accept={'image/*'} onDrop={this.dropHandler.bind(this)}>
         <div> {this.props.title} </div>
       </Dropzone>
     );
   }
 
   dropHandler(file) {
-    console.log('File uploaded');
+    this.props.markInvoiceUploaded();
   }
 }
