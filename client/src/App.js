@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Segment } from 'semantic-ui-react'
+import { Container, Segment, Button } from 'semantic-ui-react'
 import Uploader from './components/Uploader'
 import InvoiceUploader from './components/InvoiceUploader'
 import InvoiceDetails from './components/InvoiceDetails'
@@ -9,34 +9,36 @@ class App extends Component {
   constructor() {
     super()
     this.state = {}
-    this.getRecipients = this.getRecipients.bind(this)
+    this.submitInvoiceInfo = this.submitInvoiceInfo.bind(this)
     this.setInvoiceFile = this.setInvoiceFile.bind(this)
-  }
-  componentDidMount() {
-    this.getRecipients()
-  }
-  fetch(endpoint) {
-    return new Promise((resolve, reject) => {
-      window.fetch(endpoint)
-      .then(response => response.json())
-      .then(json => resolve(json))
-      .catch(error => reject(error))
-    })
-  }
-  getRecipients() {
-    this.fetch('v1/recipients')
-      .then(recipients => {
-        this.setState({recipients: recipients})
-        this.getRecipient(recipients[0].id)
-      })
-  }
-  getRecipient(id) {
-    this.fetch(`v1/recipients/${id}`)
-      .then(recipient => this.setState({recipient: recipient}))
+    this.setRecipient = this.setRecipient.bind(this)
   }
 
   setInvoiceFile(acceptedFiles) {
     this.setState({invoiceFile: acceptedFiles[0]});
+  }
+
+  setRecipient(recipient) {
+    this.setState({recipient: recipient})
+  }
+
+  cannotProceed() {
+    return !(this.state.invoiceFile && this.state.recipient)
+  }
+
+  submitInvoiceInfo() {
+    fetch('v1/invoices', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        invoice: {
+          recipient_attributes: this.state.recipient
+        }
+      })
+    })
   }
 
   render() {
@@ -44,7 +46,8 @@ class App extends Component {
     let filesSection = null;
 
     if (this.state.invoiceFile != null) {
-      invoiceSection = <InvoiceDetails invoiceFilename={this.state.invoiceFile.name}/>
+      invoiceSection = <InvoiceDetails invoiceFilename={this.state.invoiceFile.name}
+        setRecipient={this.setRecipient}/>
     } else {
       invoiceSection = <InvoiceUploader setInvoiceFile={this.setInvoiceFile}/>
     }
@@ -57,6 +60,8 @@ class App extends Component {
         <Segment>
           <Uploader title='Drag your files' multiple={true}/>
         </Segment>
+        <Button disabled={this.cannotProceed()} content='Proceed'
+          floated='right' onClick={this.submitInvoiceInfo}/>
       </Container>
     )
   }

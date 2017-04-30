@@ -18,7 +18,7 @@ export default class InvoiceDetails extends Component {
         <p>Invoice file: {this.props.invoiceFilename}</p>
       </Grid.Column>
       <Grid.Column width={4}>
-        <RecipientInfo />
+        <RecipientInfo setRecipient={this.props.setRecipient}/>
       </Grid.Column>
     </Grid>
   }

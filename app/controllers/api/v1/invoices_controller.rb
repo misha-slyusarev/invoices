@@ -39,13 +39,12 @@ class Api::V1::InvoicesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_invoice
       @invoice = Invoice.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white list" through.
     def invoice_params
-      params.fetch(:invoice, {})
+      params.fetch(:invoice, {}).permit(
+        recipient_attributes: [:name, :surname, :phone, :address] )
     end
 end

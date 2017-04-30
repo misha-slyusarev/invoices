@@ -9,8 +9,7 @@ export default class RecipientInfo extends Component {
       name: '',
       surname: '',
       address: '',
-      phone: '',
-      recipient: null
+      phone: ''
     }
   }
 
@@ -23,14 +22,13 @@ export default class RecipientInfo extends Component {
   })
 
   handleOk = (e) => {
-    let recipient = {
+    this.props.setRecipient({
       name: this.state.name,
       surname: this.state.surname,
       address: this.state.address,
-      phone: this.state.phone,
-    }
+      phone: this.state.phone
+    })
     this.setState({
-      recipient: recipient,
       modalOpen: false
     })
   }
@@ -39,12 +37,12 @@ export default class RecipientInfo extends Component {
 
   render() {
     let recipientInfo = null
-    if (!this.state.modalOpen && this.state.recipient) {
+    if (!this.state.modalOpen) {
       recipientInfo = <div>
-        <strong>Name: </strong>{this.state.recipient.name}<br/>
-        <strong>Surame: </strong>{this.state.recipient.surname}<br/>
-        <strong>Address: </strong>{this.state.recipient.address}<br/>
-        <strong>Phone: </strong>{this.state.recipient.phone}<br/>
+        <strong>Name: </strong>{this.state.name}<br/>
+        <strong>Surame: </strong>{this.state.surname}<br/>
+        <strong>Address: </strong>{this.state.address}<br/>
+        <strong>Phone: </strong>{this.state.phone}<br/>
       </div>
     }
 
