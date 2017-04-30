@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Input, Button, Segment } from 'semantic-ui-react'
 import { SingleDatePicker } from 'react-dates';
-import RecipientModal from './RecipientModal'
+import RecipientInfo from './RecipientInfo'
 
 export default class InvoiceDetails extends Component {
   constructor() {
@@ -18,7 +18,7 @@ export default class InvoiceDetails extends Component {
         <p>Invoice file: {this.props.invoiceFilename}</p>
       </Grid.Column>
       <Grid.Column width={4}>
-        <RecipientModal />
+        <RecipientInfo />
       </Grid.Column>
     </Grid>
   }
