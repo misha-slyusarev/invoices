@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Segment } from 'semantic-ui-react'
-import Uploader from './Uploader'
+import Uploader from './components/Uploader'
+import InvoiceUploader from './containers/InvoiceUploader'
 import './App.css';
 
 class App extends Component {
@@ -44,10 +45,12 @@ class App extends Component {
     if (this.state.invoiceUploaded) {
       invoiceSection = <span>Invoice uploaded</span>;
     } else {
-      invoiceSection = <Uploader
-        title='Upload your invoice'
-        multiple={false}
-        markInvoiceUploaded={this.markInvoiceUploaded}/>
+      // invoiceSection = <Uploader
+      //   title='Upload your invoice'
+      //   multiple={false}
+      //   markInvoiceUploaded={this.markInvoiceUploaded}/>
+
+      invoiceSection = <InvoiceUploader />
     }
 
     return (
