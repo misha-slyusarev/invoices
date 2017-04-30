@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Container, Segment } from 'semantic-ui-react'
 import Uploader from './components/Uploader'
 import InvoiceUploader from './components/InvoiceUploader'
+import InvoiceDetails from './components/InvoiceDetails'
 import './App.css';
 
 class App extends Component {
@@ -43,7 +44,7 @@ class App extends Component {
     let filesSection = null;
 
     if (this.state.invoiceFile != null) {
-      invoiceSection = <span>Invoice was uploaded</span>;
+      invoiceSection = <InvoiceDetails invoiceFilename={this.state.invoiceFile.name}/>
     } else {
       invoiceSection = <InvoiceUploader setInvoiceFile={this.setInvoiceFile}/>
     }
