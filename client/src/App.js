@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Container, Segment } from 'semantic-ui-react'
-import Uploader from './Uploader'
+import Uploader from './components/Uploader'
+import InvoiceUploader from './components/InvoiceUploader'
 import './App.css';
 
 class App extends Component {
@@ -8,7 +9,7 @@ class App extends Component {
     super()
     this.state = {}
     this.getRecipients = this.getRecipients.bind(this)
-    this.markInvoiceUploaded = this.markInvoiceUploaded.bind(this)
+    this.setInvoiceFile = this.setInvoiceFile.bind(this)
   }
   componentDidMount() {
     this.getRecipients()
@@ -33,21 +34,18 @@ class App extends Component {
       .then(recipient => this.setState({recipient: recipient}))
   }
 
-  markInvoiceUploaded() {
-    this.setState({invoiceUploaded: true});
+  setInvoiceFile(acceptedFiles) {
+    this.setState({invoiceFile: acceptedFiles[0]});
   }
 
   render() {
     let invoiceSection = null;
     let filesSection = null;
 
-    if (this.state.invoiceUploaded) {
-      invoiceSection = <span>Invoice uploaded</span>;
+    if (this.state.invoiceFile != null) {
+      invoiceSection = <span>Invoice was uploaded</span>;
     } else {
-      invoiceSection = <Uploader
-        title='Upload your invoice'
-        multiple={false}
-        markInvoiceUploaded={this.markInvoiceUploaded}/>
+      invoiceSection = <InvoiceUploader setInvoiceFile={this.setInvoiceFile}/>
     }
 
     return (

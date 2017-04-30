@@ -5,13 +5,12 @@ export default class Uploader extends Component {
   render() {
     return (
       <Dropzone className='uploader' multiple={this.props.multiple}
-       accept={'image/*'} onDrop={this.dropHandler.bind(this)}>
+       accept={this.props.accept} onDrop={this.dropHandler.bind(this)}>
         <div> {this.props.title} </div>
       </Dropzone>
     );
   }
-
-  dropHandler(file) {
-    this.props.markInvoiceUploaded();
+  dropHandler(acceptedFiles, rejectedFiles) {
+    this.props.handleAcceptedFiles(acceptedFiles);
   }
 }
