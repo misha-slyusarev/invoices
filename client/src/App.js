@@ -11,9 +11,11 @@ class App extends Component {
   constructor() {
     super()
     this.state = {}
+
     this.submitInvoiceInfo = this.submitInvoiceInfo.bind(this)
     this.setInvoiceFile = this.setInvoiceFile.bind(this)
     this.setRecipient = this.setRecipient.bind(this)
+    this.setAmount = this.setAmount.bind(this)
   }
 
   setInvoiceFile(acceptedFiles) {
@@ -24,12 +26,17 @@ class App extends Component {
     this.setState({recipient: recipient})
   }
 
+  setAmount(amount) {
+    this.setState({amount: amount})
+  }
+
   cannotProceed() {
     return !(this.state.invoiceFile && this.state.recipient)
   }
 
   submitInvoiceInfo() {
     request.post('v1/invoices')
+      .field('invoice[amount]', this.state.amount)
       .field('invoice[recipient_attributes][name]', this.state.recipient.name)
       .field('invoice[recipient_attributes][surname]', this.state.recipient.surname)
       .field('invoice[recipient_attributes][address]', this.state.recipient.address)
@@ -46,7 +53,7 @@ class App extends Component {
 
     if (this.state.invoiceFile != null) {
       invoiceSection = <InvoiceDetails invoiceFilename={this.state.invoiceFile.name}
-        setRecipient={this.setRecipient}/>
+        setRecipient={this.setRecipient} setAmount={this.setAmount} />
     } else {
       invoiceSection = <InvoiceUploader setInvoiceFile={this.setInvoiceFile}/>
     }

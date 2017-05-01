@@ -8,11 +8,14 @@ export default class InvoiceDetails extends Component {
     super()
     this.state = {}
   }
+
+  handleAmountChange = (e, data) => this.props.setAmount(e.target.value)
+
   render() {
     return <Grid columns={2}>
       <Grid.Column width={12}>
         <Segment>
-          <Input label='Invoice amount' placeholder='Amount' />
+          <Input label='Invoice amount' placeholder='Amount' onChange={this.handleAmountChange}/>
           <Input style={{paddingLeft: 20 + 'px'}} label='Invoice date' placeholder='Date' />
         </Segment>
         <p>Invoice file: {this.props.invoiceFilename}</p>

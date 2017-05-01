@@ -6,4 +6,6 @@ class Invoice < ApplicationRecord
 
   has_attached_file :attachment
   validates_attachment_content_type :attachment, content_type: 'application/pdf'
+
+  monetize :amount_cents
 end
