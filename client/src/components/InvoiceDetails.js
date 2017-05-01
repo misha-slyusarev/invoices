@@ -19,17 +19,19 @@ export default class InvoiceDetails extends Component {
   }
 
   render() {
-    return <Grid columns={2}>
-      <Grid.Column width={12}>
-        <Segment>
-          <Input label='Invoice amount' placeholder='Amount' onChange={this.handleAmountChange}/>
-          <DatePicker selected={this.state.date} onChange={this.handleDateChange} />
-        </Segment>
-        <p>Invoice file: {this.props.invoiceFilename}</p>
-      </Grid.Column>
-      <Grid.Column width={4}>
-        <RecipientInfo setRecipient={this.props.setRecipient}/>
-      </Grid.Column>
-    </Grid>
+    return <Segment>
+      <Grid columns={2}>
+        <Grid.Column width={12}>
+          <Segment>
+            <Input label='Invoice amount' placeholder='Amount' onChange={this.handleAmountChange}/>
+            <DatePicker selected={this.state.date} onChange={this.handleDateChange} />
+          </Segment>
+          <p>Invoice file: {this.props.invoiceFilename}</p>
+        </Grid.Column>
+        <Grid.Column width={4}>
+          <RecipientInfo setRecipient={this.props.setRecipient}/>
+        </Grid.Column>
+      </Grid>
+    </Segment>
   }
 }

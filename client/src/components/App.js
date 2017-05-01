@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import { Container, Segment, Button } from 'semantic-ui-react'
-import Uploader from './components/Uploader'
-import InvoiceUploader from './components/InvoiceUploader'
-import InvoiceDetails from './components/InvoiceDetails'
-import './App.css';
+import AdditionalFilesUploader from './uploaders/AdditionalFilesUploader'
+import InvoiceUploader from './uploaders/InvoiceUploader'
+import InvoiceDetails from './InvoiceDetails'
+import AdditionalFile from './AdditionalFile'
+import '../styles/App.css';
 
 const request = require('superagent');
 
 class App extends Component {
   constructor() {
     super()
-    this.state = {}
+    this.state = {
+      additionalFiles: []
+    }
 
+    this.addAdditionalFile = this.addAdditionalFile.bind(this)
     this.submitInvoiceInfo = this.submitInvoiceInfo.bind(this)
     this.setInvoiceFile = this.setInvoiceFile.bind(this)
     this.setRecipient = this.setRecipient.bind(this)
@@ -19,6 +23,10 @@ class App extends Component {
     this.setDate = this.setDate.bind(this)
   }
 
+  addAdditionalFile(acceptedFiles) {
+    const files = this.state.additionalFiles.concat(acceptedFiles[0])
+    this.setState({additionalFiles: files})
+  }
   setInvoiceFile(acceptedFiles) {
     this.setState({invoiceFile: acceptedFiles[0]});
   }
@@ -61,14 +69,19 @@ class App extends Component {
       invoiceSection = <InvoiceUploader setInvoiceFile={this.setInvoiceFile}/>
     }
 
+    if (this.state.additionalFiles.length > 0) {
+      filesSection = <div>
+        <AdditionalFile />
+        <AdditionalFilesUploader addAdditionalFile={this.addAdditionalFile}/>
+      </div>
+    } else {
+      filesSection = <AdditionalFilesUploader addAdditionalFile={this.addAdditionalFile}/>
+    }
+
     return (
       <Container>
-        <Segment>
-          {invoiceSection}
-        </Segment>
-        <Segment>
-          <Uploader title='Drag your files' multiple={true}/>
-        </Segment>
+        {invoiceSection}
+        {filesSection}
         <Button disabled={this.cannotProceed()} content='Proceed'
           floated='right' onClick={this.submitInvoiceInfo}/>
       </Container>
