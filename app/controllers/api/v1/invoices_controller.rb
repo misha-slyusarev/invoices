@@ -44,7 +44,7 @@ class Api::V1::InvoicesController < ApplicationController
     end
 
     def invoice_params
-      params.fetch(:invoice, {}).permit(
+      params.fetch(:invoice, {}).permit(:attachment, 
         recipient_attributes: [:name, :surname, :phone, :address] )
     end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170427150554) do
+ActiveRecord::Schema.define(version: 20170501090231) do
 
   create_table "additional_files", force: :cascade do |t|
     t.string   "description"
@@ -21,8 +21,12 @@ ActiveRecord::Schema.define(version: 20170427150554) do
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.string   "attachment_file_name"
+    t.string   "attachment_content_type"
+    t.integer  "attachment_file_size"
+    t.datetime "attachment_updated_at"
   end
 
   create_table "recipients", force: :cascade do |t|

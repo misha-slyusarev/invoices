@@ -5,6 +5,8 @@ import InvoiceUploader from './components/InvoiceUploader'
 import InvoiceDetails from './components/InvoiceDetails'
 import './App.css';
 
+const request = require('superagent');
+
 class App extends Component {
   constructor() {
     super()
@@ -27,18 +29,15 @@ class App extends Component {
   }
 
   submitInvoiceInfo() {
-    fetch('v1/invoices', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        invoice: {
-          recipient_attributes: this.state.recipient
-        }
-      })
-    })
+    request.post('v1/invoices')
+      .field('invoice[recipient_attributes][name]', this.state.recipient.name)
+      .field('invoice[recipient_attributes][surname]', this.state.recipient.surname)
+      .field('invoice[recipient_attributes][address]', this.state.recipient.address)
+      .field('invoice[recipient_attributes][phone]', this.state.recipient.phone)
+      .attach('invoice[attachment]', this.state.invoiceFile)
+      .end(function(err, res){
+        console.log('invoiceInfo submitted')
+    });
   }
 
   render() {
