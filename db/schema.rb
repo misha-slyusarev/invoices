@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170501120225) do
+ActiveRecord::Schema.define(version: 20170501133202) do
 
   create_table "additional_files", force: :cascade do |t|
     t.string   "description"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20170501120225) do
     t.datetime "attachment_updated_at"
     t.integer  "amount_cents",            default: 0,     null: false
     t.string   "amount_currency",         default: "EUR", null: false
+    t.datetime "date"
   end
 
   create_table "recipients", force: :cascade do |t|

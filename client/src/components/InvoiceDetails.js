@@ -1,22 +1,29 @@
 import React, { Component } from 'react';
 import { Grid, Input, Button, Segment } from 'semantic-ui-react'
-import { SingleDatePicker } from 'react-dates';
 import RecipientInfo from './RecipientInfo'
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default class InvoiceDetails extends Component {
   constructor() {
     super()
-    this.state = {}
+    this.state = {date: moment()}
   }
 
-  handleAmountChange = (e, data) => this.props.setAmount(e.target.value)
+  handleAmountChange = (e) => this.props.setAmount(e.target.value)
+  handleDateChange = (date) => {
+    this.setState({date: date})
+    this.props.setDate(date)
+  }
 
   render() {
     return <Grid columns={2}>
       <Grid.Column width={12}>
         <Segment>
           <Input label='Invoice amount' placeholder='Amount' onChange={this.handleAmountChange}/>
-          <Input style={{paddingLeft: 20 + 'px'}} label='Invoice date' placeholder='Date' />
+          <DatePicker selected={this.state.date} onChange={this.handleDateChange} />
         </Segment>
         <p>Invoice file: {this.props.invoiceFilename}</p>
       </Grid.Column>
@@ -26,11 +33,3 @@ export default class InvoiceDetails extends Component {
     </Grid>
   }
 }
-
-
-// <SingleDatePicker
-        //   date={this.state.date}
-        //   focused={this.state.focused}
-        //   onDateChange={date => this.setState({ date })}
-        //   onFocusChange={({ focused }) => this.setState({ focused })}
-        // />

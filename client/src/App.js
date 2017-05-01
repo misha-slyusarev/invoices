@@ -16,18 +16,20 @@ class App extends Component {
     this.setInvoiceFile = this.setInvoiceFile.bind(this)
     this.setRecipient = this.setRecipient.bind(this)
     this.setAmount = this.setAmount.bind(this)
+    this.setDate = this.setDate.bind(this)
   }
 
   setInvoiceFile(acceptedFiles) {
     this.setState({invoiceFile: acceptedFiles[0]});
   }
-
   setRecipient(recipient) {
     this.setState({recipient: recipient})
   }
-
   setAmount(amount) {
     this.setState({amount: amount})
+  }
+  setDate(date) {
+    this.setState({date: date})
   }
 
   cannotProceed() {
@@ -36,6 +38,7 @@ class App extends Component {
 
   submitInvoiceInfo() {
     request.post('v1/invoices')
+      .field('invoice[date]', this.state.date)
       .field('invoice[amount]', this.state.amount)
       .field('invoice[recipient_attributes][name]', this.state.recipient.name)
       .field('invoice[recipient_attributes][surname]', this.state.recipient.surname)
@@ -53,7 +56,7 @@ class App extends Component {
 
     if (this.state.invoiceFile != null) {
       invoiceSection = <InvoiceDetails invoiceFilename={this.state.invoiceFile.name}
-        setRecipient={this.setRecipient} setAmount={this.setAmount} />
+        setRecipient={this.setRecipient} setAmount={this.setAmount} setDate={this.setDate}/>
     } else {
       invoiceSection = <InvoiceUploader setInvoiceFile={this.setInvoiceFile}/>
     }
