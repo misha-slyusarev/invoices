@@ -9,7 +9,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 export default class InvoiceDetails extends Component {
   constructor() {
     super()
-    this.state = {date: moment()}
+    this.state = {}
+  }
+
+  componentDidMount() {
+    this.handleDateChange(moment())
+    this.props.setAmount(0)
   }
 
   handleAmountChange = (e) => this.props.setAmount(e.target.value)
