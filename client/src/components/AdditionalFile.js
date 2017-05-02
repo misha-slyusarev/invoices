@@ -6,8 +6,8 @@ export default class AdditionalFile extends Component {
     super()
     this.state = {}
   }
-  updateDescription = (e) => this.setState({description: e.target.value})
-  removeAdditionalFile = (e) => this.props.removeAdditionalFile(this.props.fileName)
+  updateDescription = (e) => this.props.updateFileDescription(this.props.id, e.target.value)
+  removeAdditionalFile = (e) => this.props.removeAdditionalFile(this.props.id)
 
   render() {
     return <div>

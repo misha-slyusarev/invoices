@@ -10,13 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170501133202) do
+ActiveRecord::Schema.define(version: 20170502180659) do
 
   create_table "additional_files", force: :cascade do |t|
     t.string   "description"
     t.integer  "invoice_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.string   "body_file_name"
+    t.string   "body_content_type"
+    t.integer  "body_file_size"
+    t.datetime "body_updated_at"
     t.index ["invoice_id"], name: "index_additional_files_on_invoice_id"
   end
 

@@ -16,6 +16,7 @@ class App extends Component {
     }
 
     this.removeAdditionalFile = this.removeAdditionalFile.bind(this)
+    this.updateFileDescription = this.updateFileDescription.bind(this)
     this.addAdditionalFile = this.addAdditionalFile.bind(this)
     this.submitInvoiceInfo = this.submitInvoiceInfo.bind(this)
     this.setInvoiceFile = this.setInvoiceFile.bind(this)
@@ -24,15 +25,21 @@ class App extends Component {
     this.setDate = this.setDate.bind(this)
   }
 
-  removeAdditionalFile(fileName) {
-    let additionalFiles = this.state.additionalFiles
-    let index = additionalFiles.map((af) => { return af.name }).indexOf(fileName)
-    additionalFiles.splice(index, 1);
+  removeAdditionalFile(id) {
+    let additionalFiles = this.state.additionalFiles;
+    additionalFiles.splice(id, 1)
     this.setState({additionalFiles: additionalFiles});
   }
   addAdditionalFile(acceptedFiles) {
-    const files = this.state.additionalFiles.concat(acceptedFiles[0])
-    this.setState({additionalFiles: files})
+    let newFiles = acceptedFiles.map((af) => {
+      return {description: '', file: af}
+    })
+    this.setState({additionalFiles: this.state.additionalFiles.concat(newFiles)})
+  }
+  updateFileDescription(id, description) {
+    let additionalFiles = this.state.additionalFiles
+    additionalFiles[id].description = description
+    this.setState({additionalFiles: additionalFiles});
   }
   setInvoiceFile(acceptedFiles) {
     this.setState({invoiceFile: acceptedFiles[0]});
@@ -52,7 +59,7 @@ class App extends Component {
   }
 
   submitInvoiceInfo() {
-    request.post('v1/invoices')
+    let req = request.post('v1/invoices')
       .field('invoice[date]', this.state.date)
       .field('invoice[amount]', this.state.amount)
       .field('invoice[recipient_attributes][name]', this.state.recipient.name)
@@ -60,7 +67,13 @@ class App extends Component {
       .field('invoice[recipient_attributes][address]', this.state.recipient.address)
       .field('invoice[recipient_attributes][phone]', this.state.recipient.phone)
       .attach('invoice[attachment]', this.state.invoiceFile)
-      .end(function(err, res){
+
+    this.state.additionalFiles.forEach((af) => {
+      req.field('invoice[additional_files_attributes][][description]', af.description)
+      req.attach('invoice[additional_files_attributes][][body]', af.file)
+    })
+
+    req.end(function(err, res){
         console.log('invoiceInfo submitted')
     });
   }
@@ -77,9 +90,11 @@ class App extends Component {
     }
 
     if (this.state.additionalFiles.length > 0) {
-      let fileList = this.state.additionalFiles.map((af) => {
-        return <List.Item>
-          <AdditionalFile fileName={af.name} removeAdditionalFile={this.removeAdditionalFile}/>
+      let fileList = this.state.additionalFiles.map((af, id) => {
+        return <List.Item key={id}>
+          <AdditionalFile id={id} fileName={af.file.name}
+            removeAdditionalFile={this.removeAdditionalFile}
+            updateFileDescription={this.updateFileDescription}/>
         </List.Item>
       })
       filesSection = <div>
