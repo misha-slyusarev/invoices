@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Button, Container } from 'semantic-ui-react'
+import { Input, Button } from 'semantic-ui-react'
 
 export default class AdditionalFile extends Component {
   constructor() {
@@ -7,12 +7,14 @@ export default class AdditionalFile extends Component {
     this.state = {}
   }
   updateDescription = (e) => this.setState({description: e.target.value})
+  removeAdditionalFile = (e) => this.props.removeAdditionalFile(this.props.fileName)
+
   render() {
-    return <Container>
+    return <div>
       <strong style={{paddingRight: 10 + 'px'}}>{this.props.fileName}</strong>
       <Input label='Description' onChange={this.updateDescription}/>
-      <Button content='Remove' size='mini' floated='right' negative onClick={this.props.removeAdditionalFile}/>
-    </Container>
+      <Button content='Remove' size='mini' floated='right' negative onClick={this.removeAdditionalFile}/>
+    </div>
   }
 }
 

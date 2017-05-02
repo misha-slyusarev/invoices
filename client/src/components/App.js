@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Segment, Button } from 'semantic-ui-react'
+import { Container, Segment, Button, List } from 'semantic-ui-react'
 import AdditionalFilesUploader from './uploaders/AdditionalFilesUploader'
 import InvoiceUploader from './uploaders/InvoiceUploader'
 import InvoiceDetails from './InvoiceDetails'
@@ -77,9 +77,13 @@ class App extends Component {
     }
 
     if (this.state.additionalFiles.length > 0) {
-      const fileName = this.state.additionalFiles[0].name
+      let fileList = this.state.additionalFiles.map((af) => {
+        return <List.Item>
+          <AdditionalFile fileName={af.name} removeAdditionalFile={this.removeAdditionalFile}/>
+        </List.Item>
+      })
       filesSection = <div>
-        <AdditionalFile fileName={fileName} removeAdditionalFile={this.removeAdditionalFile}/>
+        <List divided relaxed>{fileList}</List>
         <AdditionalFilesUploader addAdditionalFile={this.addAdditionalFile}/>
       </div>
     } else {
