@@ -15,6 +15,7 @@ class App extends Component {
       additionalFiles: []
     }
 
+    this.removeAdditionalFile = this.removeAdditionalFile.bind(this)
     this.addAdditionalFile = this.addAdditionalFile.bind(this)
     this.submitInvoiceInfo = this.submitInvoiceInfo.bind(this)
     this.setInvoiceFile = this.setInvoiceFile.bind(this)
@@ -23,6 +24,12 @@ class App extends Component {
     this.setDate = this.setDate.bind(this)
   }
 
+  removeAdditionalFile(fileName) {
+    let additionalFiles = this.state.additionalFiles
+    let index = additionalFiles.map((af) => { return af.name }).indexOf(fileName)
+    additionalFiles.splice(index, 1);
+    this.setState({additionalFiles: additionalFiles});
+  }
   addAdditionalFile(acceptedFiles) {
     const files = this.state.additionalFiles.concat(acceptedFiles[0])
     this.setState({additionalFiles: files})
@@ -70,8 +77,9 @@ class App extends Component {
     }
 
     if (this.state.additionalFiles.length > 0) {
+      const fileName = this.state.additionalFiles[0].name
       filesSection = <div>
-        <AdditionalFile />
+        <AdditionalFile fileName={fileName} removeAdditionalFile={this.removeAdditionalFile}/>
         <AdditionalFilesUploader addAdditionalFile={this.addAdditionalFile}/>
       </div>
     } else {
