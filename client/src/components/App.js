@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Segment, Button, List } from 'semantic-ui-react'
+import { Container, Segment, Button, List, Message } from 'semantic-ui-react'
 import AdditionalFilesUploader from './uploaders/AdditionalFilesUploader'
 import InvoiceUploader from './uploaders/InvoiceUploader'
 import InvoiceDetails from './InvoiceDetails'
@@ -11,8 +11,10 @@ const request = require('superagent');
 class App extends Component {
   constructor() {
     super()
+
     this.state = {
-      additionalFiles: []
+      additionalFiles: [],
+      errors: []
     }
 
     this.removeAdditionalFile = this.removeAdditionalFile.bind(this)
@@ -59,6 +61,7 @@ class App extends Component {
   }
 
   submitInvoiceInfo() {
+    const self = this
     let req = request.post('v1/invoices')
       .field('invoice[date]', this.state.date)
       .field('invoice[amount]', this.state.amount)
@@ -74,11 +77,20 @@ class App extends Component {
     })
 
     req.end(function(err, res){
-        console.log('invoiceInfo submitted')
-    });
+      if (err) {
+        var errors = []
+        let responseErrors = JSON.parse(res.text)
+        for(var field in responseErrors) {
+          let errorMessage = responseErrors[field].join(' and ');
+          errors = errors.concat(field + ' '  + errorMessage)
+        }
+        self.setState({ errors: errors });
+      }
+    })
   }
 
   render() {
+    let errorSection = null;
     let invoiceSection = null;
     let filesSection = null;
 
@@ -105,8 +117,14 @@ class App extends Component {
       filesSection = <AdditionalFilesUploader addAdditionalFile={this.addAdditionalFile}/>
     }
 
+    if (this.state.errors.length > 0) {
+      errorSection = <Message error list={this.state.errors}
+        header='There were some problems with your submission'/>
+    }
+
     return (
       <Container>
+        {errorSection}
         {invoiceSection}
         {filesSection}
         <Button disabled={this.cannotProceed()} content='Proceed'
