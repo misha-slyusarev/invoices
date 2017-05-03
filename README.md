@@ -13,6 +13,7 @@ To install and run the project run following commands:
 # git clone git@github.com:misha-slyusarev/invoices.git
 # cd invoices
 # bundle
+# rake db:migrate
 # rspec
 # rails s -p 3001
 ```
