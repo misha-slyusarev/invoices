@@ -35,7 +35,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
   }
 
   let(:error_messages) {
-    "{\"recipient.name\":[\"can't be blank\"],\"recipient.surname\":[\"can't be blank\"],\"recipient.address\":[\"can't be blank\"],\"recipient.phone\":[\"can't be blank\"],\"amount\":[\"is not a number\"]}"
+    "{\"recipient.name\":[\"can't be blank\"],\"recipient.surname\":[\"can't be blank\"],\"recipient.address\":[\"can't be blank\"],\"recipient.phone\":[\"can't be blank\"],\"attachment\":[\"can't be blank\"],\"amount\":[\"is not a number\"]}"
   }
 
   describe "POST #create" do
