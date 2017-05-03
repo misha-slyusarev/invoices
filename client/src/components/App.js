@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Button, List, Message, Segment } from 'semantic-ui-react'
+import { Container, Button, List, Message } from 'semantic-ui-react'
 
 import AdditionalFilesUploader from './uploaders/AdditionalFilesUploader'
 import InvoiceUploader from './uploaders/InvoiceUploader'
@@ -17,7 +17,7 @@ class App extends Component {
 
     this.state = {
       additionalFiles: [],
-      success: false,
+      submitted: false,
       errors: []
     }
 
@@ -77,6 +77,15 @@ class App extends Component {
     return errors
   }
 
+  backToSubmission() {
+    this.setState({
+      submitted: false,
+      additionalFiles: [],
+      invoiceFile: null,
+      recipient: null
+    })
+  }
+
   submitInvoiceInfo() {
     const self = this
 
@@ -98,7 +107,7 @@ class App extends Component {
       if (err) {
         self.setState({ errors: self.extractErrors(res.text) })
       } else {
-        self.setState({ errors: [], success: true })
+        self.setState({ errors: [], submitted: true })
       }
     })
   }
@@ -107,15 +116,21 @@ class App extends Component {
     let errorSection = null
     let invoiceSection = null
     let filesSection = null
-    let proceedButton = null
     let successSection = null
+    let actionButton = null
 
-    if (this.state.success) {
+    if (this.state.submitted) {
       const recipientFullname = `${this.state.recipient.name} ${this.state.recipient.surname}`
+
       successSection = <SuccessPage invoiceFilename={this.state.invoiceFile.name}
         invoiceDate={this.state.date.format('DD/MM/YYYY')} recipientFullname={recipientFullname}
         recipientAddress={this.state.recipient.address} recipientPhone={this.state.recipient.phone}/>
+
+      actionButton = <Button floated='right' content='Submit another invoice'
+        onClick={this.backToSubmission.bind(this)}/>
+
     } else {
+
       if (this.state.invoiceFile != null) {
         invoiceSection = <InvoiceDetails invoiceFilename={this.state.invoiceFile.name}
           setRecipient={this.setRecipient} setAmount={this.setAmount} setDate={this.setDate}/>
@@ -141,19 +156,19 @@ class App extends Component {
 
       if (this.state.errors.length > 0) {
         errorSection = <Message error list={this.state.errors}
-          header='There were some problems with your submission'/>
+          header='There are some problems with your submission'/>
       }
 
-      proceedButton = <Button disabled={this.cannotProceed()} content='Proceed'
-        floated='right' onClick={this.submitInvoiceInfo}/>
+      actionButton = <Button disabled={this.cannotProceed()} content='Proceed'
+        floated='right' onClick={this.submitInvoiceInfo.bind(this)}/>
     }
 
     return <Container>
       {errorSection}
       {invoiceSection}
       {filesSection}
-      {proceedButton}
       {successSection}
+      {actionButton}
     </Container>
   }
 }
