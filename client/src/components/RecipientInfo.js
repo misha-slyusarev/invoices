@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button, Form } from 'semantic-ui-react'
+import { Modal, Button, Form } from 'semantic-ui-react'
 
 export default class RecipientInfo extends Component {
   constructor() {

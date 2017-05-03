@@ -82,9 +82,13 @@ class App extends Component {
         let responseErrors = JSON.parse(res.text)
         for(var field in responseErrors) {
           let errorMessage = responseErrors[field].join(' and ');
-          errors = errors.concat(field + ' '  + errorMessage)
+          if(errorMessage.length > 0) {
+            errors = errors.concat(field + ' '  + errorMessage)
+          }
         }
         self.setState({ errors: errors });
+      } else {
+        self.setState({ errors: [] });
       }
     })
   }
