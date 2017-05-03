@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Segment, Button, List, Message } from 'semantic-ui-react'
+import { Container, Button, List, Message } from 'semantic-ui-react'
 import AdditionalFilesUploader from './uploaders/AdditionalFilesUploader'
 import InvoiceUploader from './uploaders/InvoiceUploader'
 import InvoiceDetails from './InvoiceDetails'
@@ -122,15 +122,13 @@ class App extends Component {
         header='There were some problems with your submission'/>
     }
 
-    return (
-      <Container>
-        {errorSection}
-        {invoiceSection}
-        {filesSection}
-        <Button disabled={this.cannotProceed()} content='Proceed'
-          floated='right' onClick={this.submitInvoiceInfo}/>
-      </Container>
-    )
+    return <Container>
+      {errorSection}
+      {invoiceSection}
+      {filesSection}
+      <Button disabled={this.cannotProceed()} content='Proceed'
+        floated='right' onClick={this.submitInvoiceInfo}/>
+    </Container>
   }
 }
 

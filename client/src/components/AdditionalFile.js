@@ -12,10 +12,8 @@ export default class AdditionalFile extends Component {
   render() {
     return <div>
       <strong style={{paddingRight: 10 + 'px'}}>{this.props.fileName}</strong>
-      <Input label='Description' onChange={this.updateDescription}/>
+      <Input placeholder='Description' onChange={this.updateDescription}/>
       <Button content='Remove' size='mini' floated='right' negative onClick={this.removeAdditionalFile}/>
     </div>
   }
 }
-
-// value={this.state.description}

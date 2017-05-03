@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Input, Button, Form, Segment } from 'semantic-ui-react'
+import { Grid, Form, Segment } from 'semantic-ui-react'
 import RecipientInfo from './RecipientInfo'
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
@@ -24,7 +24,7 @@ export default class InvoiceDetails extends Component {
   }
 
   render() {
-    return <Segment>
+    return <Segment className='App-segment'>
       <Grid columns={2}>
         <Grid.Column width={10}>
           <Form>

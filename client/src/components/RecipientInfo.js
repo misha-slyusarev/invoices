@@ -1,26 +1,17 @@
 import React, { Component } from 'react';
-import { Modal, Input, Button, Grid, Form } from 'semantic-ui-react'
+import { Modal, Input, Button, Form } from 'semantic-ui-react'
 
 export default class RecipientInfo extends Component {
   constructor() {
     super()
     this.state = {
-      modalOpen: false,
-      name: '',
-      surname: '',
-      address: '',
-      phone: ''
+      modalOpen: false, name: '', surname: '', address: '', phone: ''
     }
   }
 
-  handleOpen = (e) => this.setState({
-    modalOpen: true
-  })
-
-  handleCancel = (e) => this.setState({
-    modalOpen: false
-  })
-
+  handleOpen = (e) => this.setState({ modalOpen: true })
+  handleCancel = (e) => this.setState({ modalOpen: false })
+  handleChange = (e, { name, value }) => this.setState({ [name]: value })
   handleOk = (e) => {
     this.props.setRecipient({
       name: this.state.name,
@@ -28,28 +19,30 @@ export default class RecipientInfo extends Component {
       address: this.state.address,
       phone: this.state.phone
     })
-    this.setState({
-      modalOpen: false
-    })
+    this.setState({ modalOpen: false })
   }
-
-  handleChange = (e, { name, value }) => this.setState({ [name]: value })
+  recipientInfoEntered = () => {
+    return this.state.name || this.state.surname ||
+      this.state.address || this.state.phone
+  }
 
   render() {
     let recipientInfo = null
-    if (!this.state.modalOpen) {
+    let triggerName = 'Add recipient'
+
+    if (!this.state.modalOpen && this.recipientInfoEntered()) {
       recipientInfo = <div>
         <strong>Name: </strong>{this.state.name}<br/>
         <strong>Surame: </strong>{this.state.surname}<br/>
         <strong>Address: </strong>{this.state.address}<br/>
         <strong>Phone: </strong>{this.state.phone}<br/>
       </div>
+      triggerName = 'Edit recipient'
     }
 
     return <div>
       {recipientInfo}
-      <Modal
-        trigger={<Button onClick={this.handleOpen}>Add recepient</Button>}
+      <Modal trigger={<Button onClick={this.handleOpen} content={triggerName}/>}
         open={this.state.modalOpen}
         onClose={this.handleClose}
         dimmer='inverted'
@@ -57,13 +50,13 @@ export default class RecipientInfo extends Component {
         <Modal.Content>
           <h3>Add recipient</h3>
           <Form>
-            <Form.Field control={Input} label='First name' name='name' value={this.state.name}
+            <Form.Input label='First name' name='name' value={this.state.name}
               onChange={this.handleChange} />
-            <Form.Field control={Input} label='Surame' name='surname' value={this.state.surname}
+            <Form.Input label='Surame' name='surname' value={this.state.surname}
               onChange={this.handleChange} />
-            <Form.Field control={Input} label='Address' name='address' value={this.state.address}
+            <Form.Input label='Address' name='address' value={this.state.address}
               onChange={this.handleChange} />
-            <Form.Field control={Input} label='Phone' name='phone' value={this.state.phone}
+            <Form.Input label='Phone' name='phone' value={this.state.phone}
               onChange={this.handleChange} />
           </Form>
         </Modal.Content>
