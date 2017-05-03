@@ -8,6 +8,8 @@ class Invoice < ApplicationRecord
   has_attached_file :attachment
   validates_attachment_presence :attachment
   validates_attachment_content_type :attachment, content_type: 'application/pdf'
+  
+  validates_presence_of :date
 
-  monetize :amount_cents
+  monetize :amount_cents, numericality: { greater_than: 0 }
 end
