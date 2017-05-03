@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { Container, Button, List, Message } from 'semantic-ui-react'
+import { Container, Button, List, Message, Segment } from 'semantic-ui-react'
+
 import AdditionalFilesUploader from './uploaders/AdditionalFilesUploader'
 import InvoiceUploader from './uploaders/InvoiceUploader'
 import InvoiceDetails from './InvoiceDetails'
 import AdditionalFile from './AdditionalFile'
+import SuccessPage from './SuccessPage'
+
 import '../styles/App.css';
 
 const request = require('superagent');
@@ -14,6 +17,7 @@ class App extends Component {
 
     this.state = {
       additionalFiles: [],
+      success: false,
       errors: []
     }
 
@@ -30,7 +34,7 @@ class App extends Component {
   removeAdditionalFile(id) {
     let additionalFiles = this.state.additionalFiles;
     additionalFiles.splice(id, 1)
-    this.setState({additionalFiles: additionalFiles});
+    this.setState({additionalFiles: additionalFiles})
   }
   addAdditionalFile(acceptedFiles) {
     let newFiles = acceptedFiles.map((af) => {
@@ -41,10 +45,10 @@ class App extends Component {
   updateFileDescription(id, description) {
     let additionalFiles = this.state.additionalFiles
     additionalFiles[id].description = description
-    this.setState({additionalFiles: additionalFiles});
+    this.setState({additionalFiles: additionalFiles})
   }
   setInvoiceFile(acceptedFiles) {
-    this.setState({invoiceFile: acceptedFiles[0]});
+    this.setState({invoiceFile: acceptedFiles[0]})
   }
   setRecipient(recipient) {
     this.setState({recipient: recipient})
@@ -60,8 +64,22 @@ class App extends Component {
     return !(this.state.invoiceFile && this.state.recipient)
   }
 
+  extractErrors(errorMsg) {
+    var errors = []
+    let parsed = JSON.parse(errorMsg)
+    for(var field in parsed) {
+      if (parsed[field].length > 0) {
+        let fieldName = field.replace(/\./g, ' ')
+        let errorMessage = parsed[field].join(' and ')
+        errors = errors.concat(fieldName + ' ' + errorMessage)
+      }
+    }
+    return errors
+  }
+
   submitInvoiceInfo() {
     const self = this
+
     let req = request.post('v1/invoices')
       .field('invoice[date]', this.state.date)
       .field('invoice[amount]', this.state.amount)
@@ -78,60 +96,64 @@ class App extends Component {
 
     req.end(function(err, res){
       if (err) {
-        var errors = []
-        let responseErrors = JSON.parse(res.text)
-        for(var field in responseErrors) {
-          let errorMessage = responseErrors[field].join(' and ');
-          if(errorMessage.length > 0) {
-            errors = errors.concat(field + ' '  + errorMessage)
-          }
-        }
-        self.setState({ errors: errors });
+        self.setState({ errors: self.extractErrors(res.text) })
       } else {
-        self.setState({ errors: [] });
+        self.setState({ errors: [], success: true })
       }
     })
   }
 
   render() {
-    let errorSection = null;
-    let invoiceSection = null;
-    let filesSection = null;
+    let errorSection = null
+    let invoiceSection = null
+    let filesSection = null
+    let proceedButton = null
+    let successSection = null
 
-    if (this.state.invoiceFile != null) {
-      invoiceSection = <InvoiceDetails invoiceFilename={this.state.invoiceFile.name}
-        setRecipient={this.setRecipient} setAmount={this.setAmount} setDate={this.setDate}/>
+    if (this.state.success) {
+      const recipientFullname = `${this.state.recipient.name} ${this.state.recipient.surname}`
+      successSection = <SuccessPage invoiceFilename={this.state.invoiceFile.name}
+        invoiceDate={this.state.date.format('DD/MM/YYYY')} recipientFullname={recipientFullname}
+        recipientAddress={this.state.recipient.address} recipientPhone={this.state.recipient.phone}/>
     } else {
-      invoiceSection = <InvoiceUploader setInvoiceFile={this.setInvoiceFile}/>
-    }
+      if (this.state.invoiceFile != null) {
+        invoiceSection = <InvoiceDetails invoiceFilename={this.state.invoiceFile.name}
+          setRecipient={this.setRecipient} setAmount={this.setAmount} setDate={this.setDate}/>
+      } else {
+        invoiceSection = <InvoiceUploader setInvoiceFile={this.setInvoiceFile}/>
+      }
 
-    if (this.state.additionalFiles.length > 0) {
-      let fileList = this.state.additionalFiles.map((af, id) => {
-        return <List.Item key={id}>
-          <AdditionalFile id={id} fileName={af.file.name}
-            removeAdditionalFile={this.removeAdditionalFile}
-            updateFileDescription={this.updateFileDescription}/>
-        </List.Item>
-      })
-      filesSection = <div>
-        <List divided relaxed>{fileList}</List>
-        <AdditionalFilesUploader addAdditionalFile={this.addAdditionalFile}/>
-      </div>
-    } else {
-      filesSection = <AdditionalFilesUploader addAdditionalFile={this.addAdditionalFile}/>
-    }
+      if (this.state.additionalFiles.length > 0) {
+        let fileList = this.state.additionalFiles.map((af, id) => {
+          return <List.Item key={id}>
+            <AdditionalFile id={id} fileName={af.file.name}
+              removeAdditionalFile={this.removeAdditionalFile}
+              updateFileDescription={this.updateFileDescription}/>
+          </List.Item>
+        })
+        filesSection = <div>
+          <List divided relaxed>{fileList}</List>
+          <AdditionalFilesUploader addAdditionalFile={this.addAdditionalFile}/>
+        </div>
+      } else {
+        filesSection = <AdditionalFilesUploader addAdditionalFile={this.addAdditionalFile}/>
+      }
 
-    if (this.state.errors.length > 0) {
-      errorSection = <Message error list={this.state.errors}
-        header='There were some problems with your submission'/>
+      if (this.state.errors.length > 0) {
+        errorSection = <Message error list={this.state.errors}
+          header='There were some problems with your submission'/>
+      }
+
+      proceedButton = <Button disabled={this.cannotProceed()} content='Proceed'
+        floated='right' onClick={this.submitInvoiceInfo}/>
     }
 
     return <Container>
       {errorSection}
       {invoiceSection}
       {filesSection}
-      <Button disabled={this.cannotProceed()} content='Proceed'
-        floated='right' onClick={this.submitInvoiceInfo}/>
+      {proceedButton}
+      {successSection}
     </Container>
   }
 }
