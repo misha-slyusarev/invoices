@@ -17,7 +17,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
         name: 'John',
         surname: 'Doe',
         address: 'New York',
-        phone: '+1123456789'
+        phone: Faker::PhoneNumber.phone_number
       },
       additional_files_attributes: [{
         description: 'Additional file',
@@ -45,7 +45,7 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
   let(:error_messages) {
     "{\"additional_files.body\":[\"can't be blank\"],\"recipient.name\":[\"can't be blank\"],"\
     "\"recipient.surname\":[\"can't be blank\"],\"recipient.address\":[\"can't be blank\"],"\
-    "\"recipient.phone\":[\"can't be blank\",\"is not a number\"],\"attachment\":[\"can't be blank\"],"\
+    "\"recipient.phone\":[\"can't be blank\"],\"attachment\":[\"can't be blank\"],"\
     "\"date\":[\"can't be blank\"],\"amount\":[\"is not a number\"]}"
   }
 
