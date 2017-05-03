@@ -10,17 +10,17 @@ RSpec.describe Api::V1::InvoicesController, type: :controller do
   }
   let(:valid_attributes) {
     {
-      date: 'Wed May 03 2017 11:47:53 GMT+0200',
-      amount: '777',
+      date: Faker::Date.forward(1),
+      amount: '1000',
       attachment: uploaded_invoice,
       recipient_attributes: {
-        name: 'John',
-        surname: 'Doe',
-        address: 'New York',
+        name: Faker::Name.first_name,
+        surname: Faker::Name.last_name,
+        address: Faker::Address.street_address,
         phone: Faker::PhoneNumber.phone_number
       },
       additional_files_attributes: [{
-        description: 'Additional file',
+        description: Faker::Lorem.sentence,
         body: uploaded_additional_file
       }]
     }
