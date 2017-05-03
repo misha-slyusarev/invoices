@@ -1,5 +1,5 @@
 class Api::V1::InvoicesController < ApplicationController
-  
+
   def create
     @invoice = Invoice.new(invoice_params)
 
